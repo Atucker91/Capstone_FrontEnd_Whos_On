@@ -26,8 +26,8 @@ class App extends Component {
       this.setState({
         user
       });
-    } catch {
-      console.log("ComponentDidMount - user not found");
+    } catch(err) {
+      console.log("ComponentDidMount - user not found", err);
     }
   }   
 
@@ -40,7 +40,16 @@ class App extends Component {
   }
 
 
-
+  loginUser = async(userCredentials) =>{
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/login/`, userCredentials);
+    try{
+      localStorage.setItem('token', response.data.access);
+      window.location = '/profile';
+    }
+    catch(err){
+      console.log("LoginUser - user not found", err);
+    }
+  }
 
 
   
@@ -63,7 +72,7 @@ class App extends Component {
               }}
             />
             <Route path='/register'  render={props =>  <RegisterScreen {...props} registerUser={this.registerUser} /> } />
-            <Route path='/login' component={LoginScreen} />
+            <Route path='/login' render={props =>  <LoginScreen {...props} loginUser={this.loginUser} /> } />
             <Route path='/logout' component={Logout} />
             <Route path='/not-found' component={NotFound} />
             <Route path='/' component={LandingScreen} />
