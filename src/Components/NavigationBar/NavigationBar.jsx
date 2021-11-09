@@ -1,19 +1,19 @@
 import React from 'react';
 import './NavigationBar.css';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const NavigationBar = ({ user }) => {
+const NavigationBar = (props) => {
     return(
         <div>
-            {user && <h4>Welcome {user.username}</h4>}
+            {props.user && <h4>Welcome {props.user.username}</h4>}
             <ul>
                 <li>
-                    <Link to='/'>Home</Link>
+                    <Link to='/home'>Home</Link>
                 </li>
                 <li>
                     <Link to='/profile'>Profile</Link>
                 </li>
-                {!user && 
+                {!props.user && 
                     <React.Fragment>
                         <li>
                             <Link to='/register'>Register</Link>
@@ -23,10 +23,10 @@ const NavigationBar = ({ user }) => {
                         </li>
                     </React.Fragment>
                 }
-                {user &&
+                {props.user &&
                     <React.Fragment>
                         <li>
-                            <Link to='/logout'>Logout</Link>
+                            <Link onClick={props.logoutUser}>Logout</Link>
                         </li>
                     </React.Fragment>
                 }

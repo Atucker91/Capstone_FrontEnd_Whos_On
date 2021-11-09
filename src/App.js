@@ -6,8 +6,6 @@ import jwtDecode from "jwt-decode";
 import NavigationBar from './Components/NavigationBar/NavigationBar';
 import LandingScreen from './Components/LandingScreen/LandingScreen';
 import LoginScreen from './Components/LoginScreen/LoginScreen';
-import Logout from './Components/Logout/Logout';
-import NotFound from './Components/NotFound/NotFound';
 import ProfileScreen from './Components/ProfileScreen/ProfileScreen';
 import RegisterScreen from './Components/RegisterScreen/RegisterScreen';
 
@@ -34,6 +32,9 @@ class App extends Component {
 
 
 
+
+
+
   registerUser = async(newUser) =>{
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser);
     window.location = '/login';
@@ -44,12 +45,21 @@ class App extends Component {
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/login/`, userCredentials);
     try{
       localStorage.setItem('token', response.data.access);
+      console.log("Inside LoginUser Function", response.data.access);
       window.location = '/profile';
     }
     catch(err){
       console.log("LoginUser - user not found", err);
     }
   }
+
+  logoutUser = async() =>{
+    localStorage.removeItem('token');
+    window.location = '/login'
+  }
+
+
+
 
 
   
@@ -60,23 +70,22 @@ class App extends Component {
 
     return ( 
       <div>
-        <NavigationBar user={user} />
+        <NavigationBar user={user} logoutUser={this.logoutUser}/>
         <div>
           <Switch>
             <Route path='/profile' render={props => {
                 if (!user){
+                  console.log("Redirecting to Login")
                   return <Redirect to='/login' />;
                 } else {
+                  console.log("Redirecting to Profile")
                   return <ProfileScreen {...props} user={user} />
                 }
               }}
             />
             <Route path='/register'  render={props =>  <RegisterScreen {...props} registerUser={this.registerUser} /> } />
             <Route path='/login' render={props =>  <LoginScreen {...props} loginUser={this.loginUser} /> } />
-            <Route path='/logout' component={Logout} />
-            <Route path='/not-found' component={NotFound} />
-            <Route path='/' component={LandingScreen} />
-            <Redirect to='/not-found' />
+            <Route path='/home' component={LandingScreen} />
           </Switch>
         </div>
       </div>
