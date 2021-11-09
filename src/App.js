@@ -1,8 +1,15 @@
 import axios from 'axios';
 import React, {Component} from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom'
+import jwtDecode from "jwt-decode";
 import NavigationBar from './Components/NavigationBar/NavigationBar';
+import LandingScreen from './Components/LandingScreen/LandingScreen';
+import LoginScreen from './Components/LoginScreen/LoginScreen';
+import Logout from './Components/Logout/Logout';
+import NotFound from './Components/NotFound/NotFound';
+import ProfileScreen from './Components/ProfileScreen/ProfileScreen';
+import RegisterScreen from './Components/RegisterScreen/RegisterScreen';
 
 class App extends Component {
   constructor(props) {
