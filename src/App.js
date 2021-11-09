@@ -1,5 +1,8 @@
+import axios from 'axios';
+import React, {Component} from 'react';
 import './App.css';
-import { Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import NavigationBar from './Components/NavigationBar/NavigationBar';
 
 class App extends Component {
   constructor(props) {
@@ -27,7 +30,7 @@ class App extends Component {
 
     return ( 
       <div>
-        <Navigation user={user} />
+        <NavigationBar user={user} />
         <div>
           <Switch>
             <Route path='/profile' render={props => {
