@@ -15,7 +15,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      user: {}
+      
     }
   }
 
@@ -27,13 +27,26 @@ class App extends Component {
         user
       });
     } catch {
-  
+      console.log("ComponentDidMount - user not found")
     }
   }   
+
+
+
+
+  registerUser = async(newUser) =>{
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/register/`, newUser)
+  }
+
+
+
+
+
   
   render() { 
 
     const user = this.state.user
+    console.log("Inside Render", user)
 
     return ( 
       <div>
@@ -48,7 +61,7 @@ class App extends Component {
                 }
               }}
             />
-            <Route path='/registrer' component={RegisterScreen} />
+            <Route path='/register'  render={props =>  <RegisterScreen {...props} registerUser={this.registerUser} /> } />
             <Route path='/login' component={LoginScreen} />
             <Route path='/logout' component={Logout} />
             <Route path='/not-found' component={NotFound} />
