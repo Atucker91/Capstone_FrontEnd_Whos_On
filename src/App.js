@@ -27,7 +27,7 @@ class App extends Component {
         user
       });
     } catch {
-      console.log("ComponentDidMount - user not found")
+      console.log("ComponentDidMount - user not found");
     }
   }   
 
@@ -35,7 +35,8 @@ class App extends Component {
 
 
   registerUser = async(newUser) =>{
-    const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser)
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser);
+    window.location = '/login';
   }
 
 
@@ -45,8 +46,8 @@ class App extends Component {
   
   render() { 
 
-    const user = this.state.user
-    console.log("Inside Render", user)
+    const user = this.state.user;
+    console.log("Inside Render", user);
 
     return ( 
       <div>
