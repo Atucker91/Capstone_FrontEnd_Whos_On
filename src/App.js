@@ -1,25 +1,54 @@
-import logo from './logo.svg';
 import './App.css';
+import { Switch, Route } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      user: {}
+    }
+  }
+
+  componentDidMount() {
+    const jwt = localStorage.getItem('token');
+    try{
+      const user = jwtDecode(jwt);
+      this.setState({
+        user
+      });
+    } catch {
+  
+    }
+  }   
+  
+  render() { 
+
+    const user = this.state.user
+
+    return ( 
+      <div>
+        <Navigation user={user} />
+        <div>
+          <Switch>
+            <Route path='/profile' render={props => {
+                if (!user){
+                  return <Redirect to='/login' />;
+                } else {
+                  return <ProfileScreen {...props} user={user} />
+                }
+              }}
+            />
+            <Route path='/registrer' component={RegisterScreen} />
+            <Route path='/login' component={LoginScreen} />
+            <Route path='/logout' component={Logout} />
+            <Route path='/not-found' component={NotFound} />
+            <Route path='/' component={LandingScreen} />
+            <Redirect to='/not-found' />
+          </Switch>
+        </div>
+      </div>
+     );
+  }
 }
-
+ 
 export default App;
