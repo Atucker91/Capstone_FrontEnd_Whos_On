@@ -6,7 +6,7 @@ class CreateVenue extends Component {
         super(props);
         this.state = { 
             venue_name: '',
-            address: '',
+            city: '',
          }
     }
 
@@ -26,7 +26,7 @@ class CreateVenue extends Component {
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <input name="venue_name" onChange={this.handleChange} value={this.state.venue_name} placeholder='Venue Name'/>
-                    <input name="address" onChange={this.handleChange} value={this.state.address} placeholder='Address'/>
+                    <input name="city" onChange={this.handleChange} value={this.state.city} placeholder='City'/>
                     <button type="submit">Submit</button>
                 </form>
             </div> 

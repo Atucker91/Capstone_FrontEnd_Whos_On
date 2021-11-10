@@ -6,6 +6,7 @@ class CreateBand extends Component {
         super(props);
         this.state = { 
             band_name: '',
+            city: '',
             song_to_display: '',
          }
     }
@@ -26,6 +27,7 @@ class CreateBand extends Component {
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <input name="band_name" onChange={this.handleChange} value={this.state.band_name} placeholder='Band Name'/>
+                    <input name="city" onChange={this.handleChange} value={this.state.city} placeholder='City'/>
                     <input name="song_to_display" onChange={this.handleChange} value={this.state.song_to_display} placeholder='Add Spoitfy Link'/>
                     <button type="submit">Submit</button>
                 </form>

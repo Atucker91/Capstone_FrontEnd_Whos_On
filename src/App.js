@@ -22,7 +22,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      userData:null
+      userData:null,
+      bands: [],
+      localBands: []
     }
   }
 
@@ -120,6 +122,34 @@ class App extends Component {
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/create_venue/`, newVenue, {headers: {Authorization: 'Bearer ' + jwt}});
     window.location = '/profile';
   }
+
+
+  getBands = async() =>{
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_all_bands/`);
+    this.setState({
+      bands: response.data
+    })
+    
+  }
+
+  getBandsByLocation = async() =>{
+
+    let localBandsList = []
+
+    for(let i = 0; i < this.state.bands.length; i++){
+      
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?components=locality:${this.state.userData.city}&key=AIzaSyDROj9-6ZjDGfBN-ErBlJqFQ3ODGRUYkRw`)
+      if(this.state.bands[i].city == response.data.results.address_components.long_name){
+        localBandsList.push()
+      }
+    
+    }
+    this.setState({
+      localBands:localBandsList
+    });
+  }
+
+
 
   logoutUser = async() =>{
     localStorage.removeItem('token');
