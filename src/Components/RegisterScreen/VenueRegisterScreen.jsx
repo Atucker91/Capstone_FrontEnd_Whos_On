@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class RegisterScreen extends Component {
+class VenueRegisterScreen extends Component {
     constructor(props) {
         super(props);
         this.state = { 
@@ -11,7 +11,7 @@ class RegisterScreen extends Component {
             postal_code: '',
             password: '',
             is_band: false,
-            is_venue: false
+            is_venue: true
          }
     }
 
@@ -29,7 +29,7 @@ class RegisterScreen extends Component {
     render() { 
         return ( 
             <div>
-                <h1>Registration</h1>
+                <h1>Venue Registration</h1>
                 <form onSubmit={this.handleSubmit}>
                     <input name="username" onChange={this.handleChange} value={this.state.username} placeholder='Username'/>
                     <input name="email" onChange={this.handleChange} value={this.state.email} placeholder='Email'/>
@@ -44,4 +44,4 @@ class RegisterScreen extends Component {
     }
 }
  
-export default RegisterScreen;
+export default VenueRegisterScreen;

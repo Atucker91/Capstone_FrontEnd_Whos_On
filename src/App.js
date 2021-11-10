@@ -8,6 +8,15 @@ import LandingScreen from './Components/LandingScreen/LandingScreen';
 import LoginScreen from './Components/LoginScreen/LoginScreen';
 import ProfileScreen from './Components/ProfileScreen/ProfileScreen';
 import RegisterScreen from './Components/RegisterScreen/RegisterScreen';
+import BandRegisterScreen from './Components/RegisterScreen/BandRegisterScreen';
+import VenueRegisterScreen from './Components/RegisterScreen/VenueRegisterScreen';
+import BandLoginScreen from './Components/LoginScreen/BandLoginScreen';
+import VenueLoginScreen from './Components/LoginScreen/VenueLoginScreen';
+import CreateBand from './Components/Creation/CreateBand';
+import CreateVenue from './Components/Creation/CreateVenue';
+
+
+
 
 class App extends Component {
   constructor(props) {
@@ -44,6 +53,17 @@ class App extends Component {
     window.location = '/login';
   }
 
+  registerBand = async(newUser) =>{
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser);
+    window.location = '/bandlogin';
+  }
+
+  registerVenue = async(newUser) =>{
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser);
+    window.location = '/venuelogin';
+  }
+
+
 
   loginUser = async(userCredentials) =>{
     console.log("First Line Inside LoginUser Function", userCredentials);
@@ -56,6 +76,49 @@ class App extends Component {
     catch(err){
       console.log("LoginUser - user not found", err);
     }
+  }
+
+  loginBand = async(userCredentials) =>{
+    console.log("First Line Inside LoginUser Function", userCredentials);
+    try{
+      const response = await axios.post(`http://127.0.0.1:8000/api/auth/login/`, userCredentials);
+      localStorage.setItem('token', response.data.access);
+      console.log("Inside LoginUser Function", response.data.access);
+      window.location = '/createBand';
+    }
+    catch(err){
+      console.log("LoginUser - user not found", err);
+    }
+  }
+
+  loginVenue = async(userCredentials) =>{
+    console.log("First Line Inside LoginUser Function", userCredentials);
+    try{
+      const response = await axios.post(`http://127.0.0.1:8000/api/auth/login/`, userCredentials);
+      localStorage.setItem('token', response.data.access);
+      console.log("Inside LoginUser Function", response.data.access);
+      window.location = '/createVenue';
+    }
+    catch(err){
+      console.log("LoginUser - user not found", err);
+    }
+  }
+
+
+
+
+
+
+  createBand = async(newBand) =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/create_band/`, newBand, {headers: {Authorization: 'Bearer ' + jwt}});
+    window.location = '/profile';
+  }
+
+  createVenue = async(newVenue) =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/create_venue/`, newVenue, {headers: {Authorization: 'Bearer ' + jwt}});
+    window.location = '/profile';
   }
 
   logoutUser = async() =>{
@@ -91,8 +154,14 @@ class App extends Component {
               }}
             />
             <Route path='/register'  render={props =>  <RegisterScreen {...props} registerUser={this.registerUser} /> } />
+            <Route path='/bandregister'  render={props =>  <BandRegisterScreen {...props} registerUser={this.registerBand} /> } />
+            <Route path='/venueregister'  render={props =>  <VenueRegisterScreen {...props} registerUser={this.registerVenue} /> } />
             <Route path='/login' render={props =>  <LoginScreen {...props} loginUser={this.loginUser} /> } />
-            <Route path='/home' component={LandingScreen} />
+            <Route path='/bandlogin' render={props =>  <BandLoginScreen {...props} loginUser={this.loginBand} /> } />
+            <Route path='/venuelogin' render={props =>  <VenueLoginScreen {...props} loginUser={this.loginVenue} /> } />
+            <Route path='/createBand' render={props =>  <CreateBand {...props} createBand={this.createBand} /> } />
+            <Route path='/createVenue' render={props =>  <CreateVenue {...props} createVenue={this.createVenue} /> } />
+            <Route path='/' component={LandingScreen} />
           </Switch>
         </div>
       </div>
