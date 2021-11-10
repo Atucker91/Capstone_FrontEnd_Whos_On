@@ -13,16 +13,20 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      
+      userData:null
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const jwt = localStorage.getItem('token');
     try{
+      console.log("ComponentDidMount Inside Try")
       const user = jwtDecode(jwt);
+      let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
+      console.log(response.data)
       this.setState({
-        user
+        user,
+        userData:response.data
       });
     } catch(err) {
       console.log("ComponentDidMount - user not found", err);
@@ -42,8 +46,9 @@ class App extends Component {
 
 
   loginUser = async(userCredentials) =>{
-    const response = await axios.post(`http://127.0.0.1:8000/api/auth/login/`, userCredentials);
+    console.log("First Line Inside LoginUser Function", userCredentials);
     try{
+      const response = await axios.post(`http://127.0.0.1:8000/api/auth/login/`, userCredentials);
       localStorage.setItem('token', response.data.access);
       console.log("Inside LoginUser Function", response.data.access);
       window.location = '/profile';
@@ -70,16 +75,18 @@ class App extends Component {
 
     return ( 
       <div>
-        <NavigationBar user={user} logoutUser={this.logoutUser}/>
+        <NavigationBar user={this.state.userData} logoutUser={this.logoutUser}/>
         <div>
           <Switch>
             <Route path='/profile' render={props => {
-                if (!user){
+                if (!localStorage.getItem("token")){
                   console.log("Redirecting to Login")
                   return <Redirect to='/login' />;
                 } else {
-                  console.log("Redirecting to Profile")
-                  return <ProfileScreen {...props} user={user} />
+                  if(this.state.userData != null){
+                    console.log("Redirecting to Profile")
+                    return <ProfileScreen {...props} user={this.state.userData} />
+                  }            
                 }
               }}
             />
