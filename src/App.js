@@ -24,7 +24,9 @@ class App extends Component {
     this.state = { 
       userData:null,
       bands: [],
-      localBands: []
+      venues: [],
+      localBands: [],
+      localVenues: []
     }
   }
 
@@ -34,7 +36,9 @@ class App extends Component {
       console.log("ComponentDidMount Inside Try")
       const user = jwtDecode(jwt);
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
+      this.getBands()
       console.log(response.data)
+      console.log("ComponentDidMount End of Try")
       this.setState({
         user,
         userData:response.data
@@ -56,6 +60,7 @@ class App extends Component {
   }
 
   registerBand = async(newUser) =>{
+    console.log("Inside registerBand", newUser)
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser);
     window.location = '/bandlogin';
   }
@@ -129,7 +134,6 @@ class App extends Component {
     this.setState({
       bands: response.data
     })
-    
   }
 
   getBandsByLocation = async() =>{
@@ -147,6 +151,13 @@ class App extends Component {
     this.setState({
       localBands:localBandsList
     });
+  }
+
+  getVenues = async() =>{
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_all_venues/`);
+    this.setState({
+      venues: response.data
+    })
   }
 
 
@@ -178,7 +189,7 @@ class App extends Component {
                 } else {
                   if(this.state.userData != null){
                     console.log("Redirecting to Profile")
-                    return <ProfileScreen {...props} user={this.state.userData} />
+                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.bands} />
                   }            
                 }
               }}

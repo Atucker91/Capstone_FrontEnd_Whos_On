@@ -8,7 +8,7 @@ class VenueRegisterScreen extends Component {
             email: '',
             first_name: '',
             last_name: '',
-            city: '',
+            city: '0',
             password: '',
             is_band: false,
             is_venue: true

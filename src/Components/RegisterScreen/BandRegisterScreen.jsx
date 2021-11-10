@@ -8,7 +8,7 @@ class BandRegisterScreen extends Component {
             email: '',
             first_name: '',
             last_name: '',
-            city: '',
+            city: '0',
             password: '',
             is_band: true,
             is_venue: false
@@ -33,7 +33,7 @@ class BandRegisterScreen extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <input name="username" onChange={this.handleChange} value={this.state.username} placeholder='Username'/>
                     <input name="email" onChange={this.handleChange} value={this.state.email} placeholder='Email'/>
-                    <input name="password" onChange={this.handleChange} value={this.state.password} placeholder='password'/>
+                    <input name="password" onChange={this.handleChange} value={this.state.password} placeholder='Password'/>
                     <button type="submit">Register</button>
                 </form>
             </div> 

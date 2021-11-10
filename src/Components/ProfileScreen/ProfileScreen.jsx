@@ -5,6 +5,15 @@ const ProfileScreen = (props) => {
     return (
         <div>
             <h1>ProfileScreen {props.user.username}</h1>
+            <h2>Bands to follow</h2>
+            <div>
+                <ul>
+                    {props.bands.map((band)=> (
+                        <li>{band.band_name}</li>
+                    ))}
+                </ul>
+            </div>
+
         </div>
     )
 }
