@@ -37,6 +37,7 @@ class App extends Component {
       const user = jwtDecode(jwt);
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
       this.getBands(response.data)
+      this.getVenues(response.data)
       console.log(response.data)
       console.log("ComponentDidMount End of Try")
       this.setState({
@@ -156,11 +157,30 @@ class App extends Component {
     });
   }
 
-  getVenues = async() =>{
+  getVenues = async(user) =>{
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_all_venues/`);
     this.setState({
       venues: response.data
     })
+    this.getVenuesByLocation(user)
+  }
+
+  getVenuesByLocation = async(user) =>{
+
+    let localVenuesList = []
+
+    for(let i = 0; i < this.state.venues.length; i++){
+      
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?components=locality:${user.city}&key=AIzaSyDROj9-6ZjDGfBN-ErBlJqFQ3ODGRUYkRw`)
+      
+      if(this.state.venues[i].city == response.data.results[0].address_components[0].long_name){
+        localVenuesList.push(this.state.venues[i])
+      }
+    
+    }
+    this.setState({
+      localVenues:localVenuesList
+    });
   }
 
 
@@ -192,7 +212,7 @@ class App extends Component {
                 } else {
                   if(this.state.userData != null){
                     // console.log("Redirecting to Profile")
-                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} />
+                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
                   }            
                 }
               }}

@@ -13,6 +13,14 @@ const ProfileScreen = (props) => {
                     ))}
                 </ul>
             </div>
+            <h2>Venues to follow</h2>
+            <div>
+                <ul>
+                    {props.venues.map((venue)=> (
+                        <li>{venue.venue_name}</li>
+                    ))}
+                </ul>
+            </div>
 
         </div>
     )
