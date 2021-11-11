@@ -40,6 +40,7 @@ class App extends Component {
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
       this.getBands(response.data)
       this.getVenues(response.data)
+      this.getFollowedbands(user)
       console.log(response.data)
       console.log("ComponentDidMount End of Try")
       this.setState({
@@ -172,18 +173,23 @@ class App extends Component {
   }
 
   addBandToFollow = async(band) =>{
+    let newObject = {band_id: band.id}
     const jwt = localStorage.getItem('token')
-    const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_band/`, band.band_id, {headers: {Authorization: 'Bearer ' + jwt}});
-    this.setState({
-      followedBands: response.data
-    })
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_band/`, newObject, {headers: {Authorization: 'Bearer ' + jwt}});
+    
   }
 
   addVenueToFollow = async(venue) =>{
+    let newObject = {venue_id: venue.id}
     const jwt = localStorage.getItem('token')
-    const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_band/`, venue.venue_id, {headers: {Authorization: 'Bearer ' + jwt}});
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_venue/`, newObject, {headers: {Authorization: 'Bearer ' + jwt}});
+  }
+
+  getFollowedbands = async(user) =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_bands/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
     this.setState({
-      followedVenues: response.data
+      followedBands: response.data
     })
   }
 
@@ -214,7 +220,9 @@ class App extends Component {
                 } else {
                   if(this.state.userData != null){
                     // console.log("Redirecting to Profile")
-                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues} addBandToFollow={this.addBandToFollow} addVenueToFollow={this.addVenueToFollow}/>
+                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues} 
+                    followedBands={this.state.followedBands} followedVenues={this.state.followedVenues} addBandToFollow={this.addBandToFollow} 
+                    addVenueToFollow={this.addVenueToFollow}/>
                   }            
                 }
               }}
