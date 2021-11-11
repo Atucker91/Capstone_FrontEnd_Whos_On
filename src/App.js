@@ -36,7 +36,7 @@ class App extends Component {
       console.log("ComponentDidMount Inside Try")
       const user = jwtDecode(jwt);
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
-      this.getBands()
+      this.getBands(response.data)
       console.log(response.data)
       console.log("ComponentDidMount End of Try")
       this.setState({
@@ -129,22 +129,25 @@ class App extends Component {
   }
 
 
-  getBands = async() =>{
+  getBands = async(user) =>{
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_all_bands/`);
+    
     this.setState({
       bands: response.data
     })
+    this.getBandsByLocation(user)
   }
 
-  getBandsByLocation = async() =>{
+  getBandsByLocation = async(user) =>{
 
     let localBandsList = []
 
     for(let i = 0; i < this.state.bands.length; i++){
       
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?components=locality:${this.state.userData.city}&key=AIzaSyDROj9-6ZjDGfBN-ErBlJqFQ3ODGRUYkRw`)
-      if(this.state.bands[i].city == response.data.results.address_components.long_name){
-        localBandsList.push()
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?components=locality:${user.city}&key=AIzaSyDROj9-6ZjDGfBN-ErBlJqFQ3ODGRUYkRw`)
+      
+      if(this.state.bands[i].city == response.data.results[0].address_components[0].long_name){
+        localBandsList.push(this.state.bands[i])
       }
     
     }
@@ -175,7 +178,7 @@ class App extends Component {
   render() { 
 
     const user = this.state.user;
-    console.log("Inside Render", user);
+    // console.log("Inside Render", user);
 
     return ( 
       <div>
@@ -184,12 +187,12 @@ class App extends Component {
           <Switch>
             <Route path='/profile' render={props => {
                 if (!localStorage.getItem("token")){
-                  console.log("Redirecting to Login")
+                  // console.log("Redirecting to Login")
                   return <Redirect to='/login' />;
                 } else {
                   if(this.state.userData != null){
-                    console.log("Redirecting to Profile")
-                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.bands} />
+                    // console.log("Redirecting to Profile")
+                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} />
                   }            
                 }
               }}
