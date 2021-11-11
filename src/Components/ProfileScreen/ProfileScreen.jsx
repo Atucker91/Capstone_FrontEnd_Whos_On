@@ -9,7 +9,10 @@ const ProfileScreen = (props) => {
             <div>
                 <ul>
                     {props.bands.map((band)=> (
-                        <li>{band.band_name}</li>
+                        <div>
+                            <li>{band.band_name}</li>
+                            <button onclick={()=> {props.addBandToFollow(band)}}>Follow</button>
+                        </div>
                     ))}
                 </ul>
             </div>
@@ -17,7 +20,10 @@ const ProfileScreen = (props) => {
             <div>
                 <ul>
                     {props.venues.map((venue)=> (
-                        <li>{venue.venue_name}</li>
+                        <div>
+                            <li>{venue.venue_name}</li>
+                            <button onclick={()=> {props.addVenueToFollow(venue)}}>Follow</button>
+                        </div>
                     ))}
                 </ul>
             </div>

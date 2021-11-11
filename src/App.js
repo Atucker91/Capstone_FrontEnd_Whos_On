@@ -26,7 +26,9 @@ class App extends Component {
       bands: [],
       venues: [],
       localBands: [],
-      localVenues: []
+      localVenues: [],
+      followedBands: [],
+      followedVenues: []
     }
   }
 
@@ -49,12 +51,6 @@ class App extends Component {
     }
   }   
 
-
-
-
-
-
-
   registerUser = async(newUser) =>{
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser);
     window.location = '/login';
@@ -70,8 +66,6 @@ class App extends Component {
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/register/`, newUser);
     window.location = '/venuelogin';
   }
-
-
 
   loginUser = async(userCredentials) =>{
     console.log("First Line Inside LoginUser Function", userCredentials);
@@ -112,11 +106,6 @@ class App extends Component {
     }
   }
 
-
-
-
-
-
   createBand = async(newBand) =>{
     const jwt = localStorage.getItem('token')
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/create_band/`, newBand, {headers: {Authorization: 'Bearer ' + jwt}});
@@ -128,7 +117,6 @@ class App extends Component {
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/create_venue/`, newVenue, {headers: {Authorization: 'Bearer ' + jwt}});
     window.location = '/profile';
   }
-
 
   getBands = async(user) =>{
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_all_bands/`);
@@ -183,7 +171,21 @@ class App extends Component {
     });
   }
 
+  addBandToFollow = async(band) =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_band/`, band.band_id, {headers: {Authorization: 'Bearer ' + jwt}});
+    this.setState({
+      followedBands: response.data
+    })
+  }
 
+  addVenueToFollow = async(venue) =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_band/`, venue.venue_id, {headers: {Authorization: 'Bearer ' + jwt}});
+    this.setState({
+      followedVenues: response.data
+    })
+  }
 
   logoutUser = async() =>{
     localStorage.removeItem('token');
@@ -212,7 +214,7 @@ class App extends Component {
                 } else {
                   if(this.state.userData != null){
                     // console.log("Redirecting to Profile")
-                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
+                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues} addBandToFollow={this.addBandToFollow} addVenueToFollow={this.addVenueToFollow}/>
                   }            
                 }
               }}
