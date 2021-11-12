@@ -30,6 +30,7 @@ class App extends Component {
       localVenues: [],
       followedBands: [],
       followedVenues: [],
+      localVenuesNotFollowed: [],
       allSchedule: []
     }
   }
@@ -41,14 +42,14 @@ class App extends Component {
       const user = jwtDecode(jwt);
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
       this.getBands(response.data, user)
-      this.getVenues(response.data, user)
-      this.getShowSchedule()
+      // this.getVenues(response.data, user)
       console.log(response.data)
       console.log("ComponentDidMount End of Try")
       this.setState({
         user,
         userData:response.data
       });
+      this.getShowSchedule(response.data)
     } catch(err) {
       console.log("ComponentDidMount - user not found", err);
     }
@@ -127,7 +128,7 @@ class App extends Component {
     this.setState({
       bands: response.data
     })
-    this.getBandsByLocation(user, userToken)
+    this.getVenues(user, userToken)
   }
 
   getBandsByLocation = async(user, userToken) =>{
@@ -146,7 +147,7 @@ class App extends Component {
     this.setState({
       localBands:localBandsList
     });
-    this.getFollowedbands(userToken)
+    this.getVenuesByLocation(user,userToken)
   }
 
   getVenues = async(user, userToken) =>{
@@ -154,7 +155,7 @@ class App extends Component {
     this.setState({
       venues: response.data
     })
-    this.getVenuesByLocation(user, userToken)
+    this.getBandsByLocation(user, userToken)
   }
 
   getVenuesByLocation = async(user, userToken) =>{
@@ -173,7 +174,7 @@ class App extends Component {
     this.setState({
       localVenues:localVenuesList
     });
-    this.getFollowedvenues(userToken)
+    this.getFollowedbands(user, userToken)
   }
 
   addBandToFollow = async(band) =>{
@@ -190,11 +191,11 @@ class App extends Component {
     window.location = '/profile';
   }
 
-  getFollowedbands = async(user) =>{
+  getFollowedbands = async(user, userToken) =>{
     let newArray = this.state.localBands
 
     const jwt = localStorage.getItem('token')
-    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_bands/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_bands/${userToken.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
     
     for(let i = 0; i < this.state.localBands.length; i++)
     {
@@ -211,37 +212,82 @@ class App extends Component {
       followedBands: response.data,
       localBands: newArray
     })
+    this.getFollowedvenues(user, userToken, response.data)
   }
 
-  getFollowedvenues = async(user) =>{
-    let newArray = this.state.localVenues
+  getFollowedvenues = async(user, userToken, bandData) =>{
+    let newArray = []
 
     const jwt = localStorage.getItem('token')
-    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_venues/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_venues/${userToken.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
     
     for(let i = 0; i < this.state.localVenues.length; i++)
     {
       for(let x = 0; x < response.data.length; x++)
       {
-        if(this.state.localVenues[i].id == response.data[x].id)
+        if(this.state.localVenues[i].id != response.data[x].id)
         {
-          newArray.splice(i, 1)
+          for(let y = 0; y <= newArray.length; y++)
+          {
+            if(y == 0)
+            {
+              newArray.push(this.state.localVenues[i])
+            }
+            else if(newArray[y-1].id != this.state.localVenues[i].id)
+            {
+              newArray.push(this.state.localVenues[i])
+            }
+          }
         }
       }
     }
 
     this.setState({
       followedVenues: response.data,
-      localVenues: newArray
+      localVenuesNotFollowed: newArray
     })
+    console.log(this.state.followedVenues, this.state.followedBands)
+    this.getShowSchedule(user, bandData, response.data)
   }
 
-  getShowSchedule = async() =>{
+  getShowSchedule = async(user, bandData, venueData) =>{
     const jwt = localStorage.getItem('token')
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_schedule/`, {headers: {Authorization: 'Bearer ' + jwt}});
     
+    
+    let newArray = []
+    let fBands = this.state.followedBands
+    let lVenues = this.state.localVenues
+
+    if(user.is_band == false && user.is_venue == false)
+    {
+      for(let i = 0; i < fBands.length; i++)
+      {
+        for(let x = 0; x < response.data.length; x++)
+        {
+          if(fBands[i].id == response.data[x].band_id)
+          {
+            for(let y = 0; y < lVenues.length; y++)
+            {
+              if(lVenues[y].id == response.data[x].venue_id)
+              {  
+                // newArray.splice(i, 1)
+                let show = {
+                  date: response.data[x].date,
+                  venue_name: lVenues[y].venue_name,
+                  band_name: fBands[i].band_name
+
+                }
+                newArray.push(show)
+              }
+            }
+          }
+        }
+      }
+    }
+
     this.setState({
-      allSchedule: response.data
+      allSchedule: newArray
     });
   }
 
@@ -259,6 +305,7 @@ class App extends Component {
 
     const user = this.state.user;
     // console.log("Inside Render", user);
+    
 
     return ( 
       <div>
@@ -272,7 +319,7 @@ class App extends Component {
                 } else {
                   if(this.state.userData != null && this.state.userData.is_band == false && this.state.userData.is_venue == false){
                     // console.log("Redirecting to Profile")
-                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues} 
+                    return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenuesNotFollowed} 
                     followedBands={this.state.followedBands} followedVenues={this.state.followedVenues} addBandToFollow={this.addBandToFollow} 
                     addVenueToFollow={this.addVenueToFollow} allSchedule={this.state.allSchedule}/>
                   }
