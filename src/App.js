@@ -14,7 +14,8 @@ import BandLoginScreen from './Components/LoginScreen/BandLoginScreen';
 import VenueLoginScreen from './Components/LoginScreen/VenueLoginScreen';
 import CreateBand from './Components/Creation/CreateBand';
 import CreateVenue from './Components/Creation/CreateVenue';
-
+import BandProfileScreen from './Components/ProfileScreen/BandProfileScreen';
+import VenueProfileScreen from './Components/ProfileScreen/VenueProfileScreen';
 
 
 
@@ -41,6 +42,7 @@ class App extends Component {
       this.getBands(response.data)
       this.getVenues(response.data)
       this.getFollowedbands(user)
+      this.getFollowedvenues(user)
       console.log(response.data)
       console.log("ComponentDidMount End of Try")
       this.setState({
@@ -176,13 +178,14 @@ class App extends Component {
     let newObject = {band_id: band.id}
     const jwt = localStorage.getItem('token')
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_band/`, newObject, {headers: {Authorization: 'Bearer ' + jwt}});
-    
+    window.location = '/profile';
   }
 
   addVenueToFollow = async(venue) =>{
     let newObject = {venue_id: venue.id}
     const jwt = localStorage.getItem('token')
     const response = await axios.post(`http://127.0.0.1:8000/api/auth/follow_venue/`, newObject, {headers: {Authorization: 'Bearer ' + jwt}});
+    window.location = '/profile';
   }
 
   getFollowedbands = async(user) =>{
@@ -192,6 +195,18 @@ class App extends Component {
       followedBands: response.data
     })
   }
+
+  getFollowedvenues = async(user) =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_venues/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
+    this.setState({
+      followedVenues: response.data
+    })
+  }
+
+  // addShow = async(show) =>{
+
+  // }
 
   logoutUser = async() =>{
     localStorage.removeItem('token');
@@ -218,12 +233,18 @@ class App extends Component {
                   // console.log("Redirecting to Login")
                   return <Redirect to='/login' />;
                 } else {
-                  if(this.state.userData != null){
+                  if(this.state.userData != null && this.state.userData.is_band == false && this.state.userData.is_venue == false){
                     // console.log("Redirecting to Profile")
                     return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues} 
                     followedBands={this.state.followedBands} followedVenues={this.state.followedVenues} addBandToFollow={this.addBandToFollow} 
                     addVenueToFollow={this.addVenueToFollow}/>
-                  }            
+                  }
+                  else if(this.state.userData != null && this.state.userData.is_band)   {
+                    return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
+                  }  
+                  else if(this.state.userData != null && this.state.userData.is_venue){
+                    return <VenueProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
+                  }       
                 }
               }}
             />
