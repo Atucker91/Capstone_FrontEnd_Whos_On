@@ -53,6 +53,17 @@ const ProfileScreen = (props) => {
                 </ul>
             </div>
 
+            <h2>Schedule</h2>
+            <div>
+                <ul>
+                    {props.allSchedule.map((show)=> (
+                        <div>
+                            <li>{show.date}</li>
+                        </div>
+                    ))}
+                </ul>
+            </div>
+
         </div>
     )
 }

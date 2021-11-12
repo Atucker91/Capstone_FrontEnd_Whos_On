@@ -29,7 +29,8 @@ class App extends Component {
       localBands: [],
       localVenues: [],
       followedBands: [],
-      followedVenues: []
+      followedVenues: [],
+      allSchedule: []
     }
   }
 
@@ -41,6 +42,7 @@ class App extends Component {
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
       this.getBands(response.data, user)
       this.getVenues(response.data, user)
+      this.getShowSchedule()
       console.log(response.data)
       console.log("ComponentDidMount End of Try")
       this.setState({
@@ -234,9 +236,14 @@ class App extends Component {
     })
   }
 
-  // addShow = async(show) =>{
-
-  // }
+  getShowSchedule = async() =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_schedule/`, {headers: {Authorization: 'Bearer ' + jwt}});
+    
+    this.setState({
+      allSchedule: response.data
+    });
+  }
 
   logoutUser = async() =>{
     localStorage.removeItem('token');
@@ -267,7 +274,7 @@ class App extends Component {
                     // console.log("Redirecting to Profile")
                     return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues} 
                     followedBands={this.state.followedBands} followedVenues={this.state.followedVenues} addBandToFollow={this.addBandToFollow} 
-                    addVenueToFollow={this.addVenueToFollow}/>
+                    addVenueToFollow={this.addVenueToFollow} allSchedule={this.state.allSchedule}/>
                   }
                   else if(this.state.userData != null && this.state.userData.is_band)   {
                     return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
