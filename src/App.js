@@ -39,10 +39,8 @@ class App extends Component {
       console.log("ComponentDidMount Inside Try")
       const user = jwtDecode(jwt);
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
-      this.getBands(response.data)
-      this.getVenues(response.data)
-      this.getFollowedbands(user)
-      this.getFollowedvenues(user)
+      this.getBands(response.data, user)
+      this.getVenues(response.data, user)
       console.log(response.data)
       console.log("ComponentDidMount End of Try")
       this.setState({
@@ -121,16 +119,16 @@ class App extends Component {
     window.location = '/profile';
   }
 
-  getBands = async(user) =>{
+  getBands = async(user, userToken) =>{
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_all_bands/`);
     
     this.setState({
       bands: response.data
     })
-    this.getBandsByLocation(user)
+    this.getBandsByLocation(user, userToken)
   }
 
-  getBandsByLocation = async(user) =>{
+  getBandsByLocation = async(user, userToken) =>{
 
     let localBandsList = []
 
@@ -146,17 +144,18 @@ class App extends Component {
     this.setState({
       localBands:localBandsList
     });
+    this.getFollowedbands(userToken)
   }
 
-  getVenues = async(user) =>{
+  getVenues = async(user, userToken) =>{
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_all_venues/`);
     this.setState({
       venues: response.data
     })
-    this.getVenuesByLocation(user)
+    this.getVenuesByLocation(user, userToken)
   }
 
-  getVenuesByLocation = async(user) =>{
+  getVenuesByLocation = async(user, userToken) =>{
 
     let localVenuesList = []
 
@@ -172,6 +171,7 @@ class App extends Component {
     this.setState({
       localVenues:localVenuesList
     });
+    this.getFollowedvenues(userToken)
   }
 
   addBandToFollow = async(band) =>{
@@ -189,18 +189,48 @@ class App extends Component {
   }
 
   getFollowedbands = async(user) =>{
+    let newArray = this.state.localBands
+
     const jwt = localStorage.getItem('token')
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_bands/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
+    
+    for(let i = 0; i < this.state.localBands.length; i++)
+    {
+      for(let x = 0; x < response.data.length; x++)
+      {
+        if(this.state.localBands[i].id == response.data[x].id)
+        {
+          newArray.splice(i, 1)
+        }
+      }
+    }
+
     this.setState({
-      followedBands: response.data
+      followedBands: response.data,
+      localBands: newArray
     })
   }
 
   getFollowedvenues = async(user) =>{
+    let newArray = this.state.localVenues
+
     const jwt = localStorage.getItem('token')
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_venues/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
+    
+    for(let i = 0; i < this.state.localVenues.length; i++)
+    {
+      for(let x = 0; x < response.data.length; x++)
+      {
+        if(this.state.localVenues[i].id == response.data[x].id)
+        {
+          newArray.splice(i, 1)
+        }
+      }
+    }
+
     this.setState({
-      followedVenues: response.data
+      followedVenues: response.data,
+      localVenues: newArray
     })
   }
 
