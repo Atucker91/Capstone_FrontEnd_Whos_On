@@ -217,27 +217,22 @@ class App extends Component {
 
   getFollowedvenues = async(user, userToken, bandData) =>{
     let newArray = []
-
+    
     const jwt = localStorage.getItem('token')
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_followed_venues/${userToken.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}});
     
     for(let i = 0; i < this.state.localVenues.length; i++)
     {
+      newArray.push(this.state.localVenues[i])
+    }
+
+    for(let i = 0; i < this.state.localVenues.length; i++)
+    {
       for(let x = 0; x < response.data.length; x++)
       {
-        if(this.state.localVenues[i].id != response.data[x].id)
+        if(this.state.localVenues[i].id == response.data[x].id)
         {
-          for(let y = 0; y <= newArray.length; y++)
-          {
-            if(y == 0)
-            {
-              newArray.push(this.state.localVenues[i])
-            }
-            else if(newArray[y-1].id != this.state.localVenues[i].id)
-            {
-              newArray.push(this.state.localVenues[i])
-            }
-          }
+          newArray.splice(i, 1)
         }
       }
     }
@@ -246,7 +241,6 @@ class App extends Component {
       followedVenues: response.data,
       localVenuesNotFollowed: newArray
     })
-    console.log(this.state.followedVenues, this.state.followedBands)
     this.getShowSchedule(user, bandData, response.data)
   }
 
@@ -254,7 +248,7 @@ class App extends Component {
     const jwt = localStorage.getItem('token')
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_schedule/`, {headers: {Authorization: 'Bearer ' + jwt}});
     
-    
+    console.log("Get Schedule: followedBands: ", this.state.followedBands)
     let newArray = []
     let fBands = this.state.followedBands
     let lVenues = this.state.localVenues
