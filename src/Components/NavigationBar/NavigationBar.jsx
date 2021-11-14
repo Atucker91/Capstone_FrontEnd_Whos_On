@@ -6,7 +6,7 @@ const NavigationBar = (props) => {
     return(
         <div>
             {props.user && <h4>Welcome {props.user.username}</h4>}
-            <ul>
+            <ul class="nav-list">
                 <li>
                     <Link to='/'>Home</Link>
                 </li>
@@ -25,7 +25,7 @@ const NavigationBar = (props) => {
                 }
                 {props.user &&
                     <React.Fragment>
-                        <li>
+                        <li class="logout">
                             <Link onClick={props.logoutUser}>Logout</Link>
                         </li>
                     </React.Fragment>

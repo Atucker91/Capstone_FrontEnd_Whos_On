@@ -46,6 +46,8 @@ const BandProfileScreen = (props) => {
             <div>
                 <h1>Band ProfileScreen {props.user.username}</h1>
                 <h1>{props.loggedInBand.band_name}</h1>
+                <img src="https://storage.googleapis.com/whos_on_bucket/band.jpg" alt="band photo" width="700" height="500"></img>
+                <iframe src="https://open.spotify.com/embed/album/1DFixLWuPkv3KT3TnV35m3" width="500" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
             </div>
 
             <h2>Schedule</h2>
