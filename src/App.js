@@ -361,6 +361,11 @@ class App extends Component {
     });
   }
 
+  addShow = async(show) =>{
+    const jwt = localStorage.getItem('token')
+    const response = await axios.post(`http://127.0.0.1:8000/api/auth/make_show_date/`, show, {headers: {Authorization: 'Bearer ' + jwt}});
+    window.location = '/profile';
+  }
 
   logoutUser = async() =>{
     localStorage.removeItem('token');
@@ -395,12 +400,12 @@ class App extends Component {
                     addVenueToFollow={this.addVenueToFollow} allSchedule={this.state.allSchedule}/>
                   }
                   else if(this.state.userData != null && this.state.userData.is_band)   {
-                    return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}
-                    loggedInBand={this.state.loggedInBand} allSchedule={this.state.allSchedule}/>
+                    return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.bands} venues={this.state.venues}
+                    loggedInBand={this.state.loggedInBand} allSchedule={this.state.allSchedule} addShow={this.addShow}/>
                   }  
                   else if(this.state.userData != null && this.state.userData.is_venue){
-                    return <VenueProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}
-                    loggedInVenue={this.state.loggedInVenue} allSchedule={this.state.allSchedule}/>
+                    return <VenueProfileScreen {...props} user={this.state.userData} bands={this.state.bands} venues={this.state.venues}
+                    loggedInVenue={this.state.loggedInVenue} allSchedule={this.state.allSchedule} addShow={this.addShow}/>
                   }       
                 }
               }}

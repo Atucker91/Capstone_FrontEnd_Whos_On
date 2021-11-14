@@ -1,6 +1,46 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 const BandProfileScreen = (props) => {
+
+    const [venue_name, setVenueName] = useState();
+    const [date, setDate] = useState();
+    // const [venueId, setVenueId] = useState();
+    let venueId = 1;
+
+    const handleChangeVenue = (event) => {
+        
+        setVenueName(event.target.value)
+    }
+
+    const handleChange = (event) => {
+        setDate(event.target.value)
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        console.log("venue name:", venue_name)
+        console.log("date:", date)
+        console.log("band id:", props.loggedInBand.id)
+
+
+        for(let i = 0; i < props.venues.length; i++)
+        {
+            if(props.venues[i].venue_name == venue_name)
+            {
+                venueId = props.venues[i].id
+            }
+        }
+
+        console.log("venue id:", venueId)
+
+        let show = {
+            band_id:props.loggedInBand.id,
+            venue_id:venueId,
+            date:date
+        }
+        props.addShow(show)
+    }
 
     return (
         <div>
@@ -19,6 +59,16 @@ const BandProfileScreen = (props) => {
                     ))}
                 </ul>
             </div>
+
+            <div>
+                <h2>Add Show</h2>
+                <form onSubmit={handleSubmit}>
+                    <input name="venue_name" onChange={handleChangeVenue} value={venue_name} placeholder='Venue Name'/>
+                    <input name="date" onChange={handleChange} value={date} placeholder='Date'/>
+                    <button type="submit">Add</button>
+                </form>
+            </div> 
+
         </div>
     )
 }
