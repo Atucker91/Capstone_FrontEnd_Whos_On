@@ -43,15 +43,27 @@ class App extends Component {
       console.log("ComponentDidMount Inside Try")
       const user = jwtDecode(jwt);
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
+      
       this.getBands(response.data, user)
-      // this.getVenues(response.data, user)
       console.log(response.data)
+      console.log(response.data.id)
       console.log("ComponentDidMount End of Try")
-      this.setState({
-        user,
-        userData:response.data
-      });
-      this.getShowSchedule(response.data)
+      if(response.data.is_band)
+      {
+        let responseband = await axios.get(`http://127.0.0.1:8000/api/auth/get_logged_in_band/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
+        this.setState({
+          user,
+          userData:response.data,
+          loggedInBand:responseband.data
+        });
+      }
+      else{
+        this.setState({
+          user,
+          userData:response.data
+        });
+      }
+        
     } catch(err) {
       console.log("ComponentDidMount - user not found", err);
     }
@@ -157,7 +169,10 @@ class App extends Component {
     this.setState({
       venues: response.data
     })
+    
     this.getBandsByLocation(user, userToken)
+    
+    
   }
 
   getVenuesByLocation = async(user, userToken) =>{
@@ -287,6 +302,32 @@ class App extends Component {
     });
   }
 
+
+  // setLoggedInBand = async(user) =>{
+  //   for(let i = 0; i < this.state.bands.length; i++)
+  //     {
+  //       if(this.state.bands[i].user_id == user.id)
+  //       {
+  //         this.setState({
+  //           loggedInBand:this.state.bands[i]
+  //         });
+  //       }
+  //     }
+  // }
+
+  // setLoggedInVenue = async(user) =>{
+  //   for(let i = 0; i < this.state.venues.length; i++)
+  //     {
+  //       if(this.state.venues[i].user_id == user.id)
+  //       {
+  //       this.setState({
+  //           loggedInVenue:this.state.venues[i]
+  //         });
+  //       }
+  //     }
+  // }
+
+
   logoutUser = async() =>{
     localStorage.removeItem('token');
     window.location = '/login'
@@ -320,7 +361,8 @@ class App extends Component {
                     addVenueToFollow={this.addVenueToFollow} allSchedule={this.state.allSchedule}/>
                   }
                   else if(this.state.userData != null && this.state.userData.is_band)   {
-                    return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
+                    return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}
+                    loggedInBand={this.state.loggedInBand}/>
                   }  
                   else if(this.state.userData != null && this.state.userData.is_venue){
                     return <VenueProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
