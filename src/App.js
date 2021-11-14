@@ -24,6 +24,8 @@ class App extends Component {
     super(props);
     this.state = { 
       userData:null,
+      loggedInBand:null,
+      loggedInVenue:null,
       bands: [],
       venues: [],
       localBands: [],
