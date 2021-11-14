@@ -4,7 +4,6 @@ const BandProfileScreen = (props) => {
 
     const [venue_name, setVenueName] = useState();
     const [date, setDate] = useState();
-    // const [venueId, setVenueId] = useState();
     let venueId = 1;
 
     const handleChangeVenue = (event) => {
