@@ -45,6 +45,7 @@ class App extends Component {
       let response = await axios.get(`http://127.0.0.1:8000/api/auth/get_user/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
       
       this.getBands(response.data, user)
+      this.getVenues(response.data, user)
       console.log(response.data)
       console.log(response.data.id)
       console.log("ComponentDidMount End of Try")
@@ -55,6 +56,14 @@ class App extends Component {
           user,
           userData:response.data,
           loggedInBand:responseband.data
+        });
+      }
+      else if(response.data.is_venue){
+        let responsevenue = await axios.get(`http://127.0.0.1:8000/api/auth/get_logged_in_venue/${user.user_id}/`, {headers: {Authorization: 'Bearer ' + jwt}})
+        this.setState({
+          user,
+          userData:response.data,
+          loggedInVenue:responsevenue.data
         });
       }
       else{
@@ -142,7 +151,7 @@ class App extends Component {
     this.setState({
       bands: response.data
     })
-    this.getVenues(user, userToken)
+    // this.getVenues(user, userToken)
   }
 
   getBandsByLocation = async(user, userToken) =>{
@@ -258,10 +267,10 @@ class App extends Component {
       followedVenues: response.data,
       localVenuesNotFollowed: newArray
     })
-    this.getShowSchedule(user, bandData, response.data)
+    this.getShowSchedule(user, userToken, bandData, response.data)
   }
 
-  getShowSchedule = async(user, bandData, venueData) =>{
+  getShowSchedule = async(user, userToken, bandData, venueData) =>{
     const jwt = localStorage.getItem('token')
     const response = await axios.get(`http://127.0.0.1:8000/api/auth/get_schedule/`, {headers: {Authorization: 'Bearer ' + jwt}});
     
@@ -269,6 +278,8 @@ class App extends Component {
     let newArray = []
     let fBands = this.state.followedBands
     let lVenues = this.state.localVenues
+    let bands = this.state.bands
+    let venues = this.state.venues
 
     if(user.is_band == false && user.is_venue == false)
     {
@@ -282,7 +293,7 @@ class App extends Component {
             {
               if(lVenues[y].id == response.data[x].venue_id)
               {  
-                // newArray.splice(i, 1)
+                
                 let show = {
                   date: response.data[x].date,
                   venue_name: lVenues[y].venue_name,
@@ -297,35 +308,58 @@ class App extends Component {
       }
     }
 
+    else if(user.is_band)
+    {
+      for(let i = 0; i < bands.length; i++)
+      {
+        for(let x = 0; x < response.data.length; x++)
+        {
+          if(userToken.user_id == bands[i].user_id && bands[i].id == response.data[x].band_id){
+            for(let y = 0; y < venues.length; y++){
+              if(venues[y].id == response.data[x].venue_id){
+                let show = {
+                  date: response.data[x].date,
+                  venue_name: venues[y].venue_name,
+                  band_name: bands[i].band_name
+    
+                }
+                newArray.push(show)
+              }
+            }
+            
+          }
+        }
+      }
+    }
+
+    else if(user.is_venue)
+    {
+      for(let i = 0; i < venues.length; i++)
+      {
+        for(let x = 0; x < response.data.length; x++)
+        {
+          if(userToken.user_id == venues[i].user_id && venues[i].id == response.data[x].venue_id){
+            for(let y = 0; y < bands.length; y++){
+              if(bands[y].id == response.data[x].band_id){
+                let show = {
+                  date: response.data[x].date,
+                  venue_name: venues[i].venue_name,
+                  band_name: bands[y].band_name
+    
+                }
+                newArray.push(show)
+              }
+            }
+            
+          }
+        }
+      }
+    }
+
     this.setState({
       allSchedule: newArray
     });
   }
-
-
-  // setLoggedInBand = async(user) =>{
-  //   for(let i = 0; i < this.state.bands.length; i++)
-  //     {
-  //       if(this.state.bands[i].user_id == user.id)
-  //       {
-  //         this.setState({
-  //           loggedInBand:this.state.bands[i]
-  //         });
-  //       }
-  //     }
-  // }
-
-  // setLoggedInVenue = async(user) =>{
-  //   for(let i = 0; i < this.state.venues.length; i++)
-  //     {
-  //       if(this.state.venues[i].user_id == user.id)
-  //       {
-  //       this.setState({
-  //           loggedInVenue:this.state.venues[i]
-  //         });
-  //       }
-  //     }
-  // }
 
 
   logoutUser = async() =>{
@@ -362,10 +396,11 @@ class App extends Component {
                   }
                   else if(this.state.userData != null && this.state.userData.is_band)   {
                     return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}
-                    loggedInBand={this.state.loggedInBand}/>
+                    loggedInBand={this.state.loggedInBand} allSchedule={this.state.allSchedule}/>
                   }  
                   else if(this.state.userData != null && this.state.userData.is_venue){
-                    return <VenueProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}/>
+                    return <VenueProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenues}
+                    loggedInVenue={this.state.loggedInVenue} allSchedule={this.state.allSchedule}/>
                   }       
                 }
               }}
