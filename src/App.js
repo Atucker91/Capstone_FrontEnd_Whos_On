@@ -308,7 +308,8 @@ class App extends Component {
                   year: response.data[x].year,
                   date: response.data[x].date,
                   venue_name: lVenues[y].venue_name,
-                  band_name: fBands[i].band_name
+                  band_name: fBands[i].band_name,
+                  img: fBands[i].img
 
                 }
                 newArray.push(show)

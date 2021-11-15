@@ -23,7 +23,7 @@ const ProfileScreen = (props) => {
                                     {props.allSchedule.map((show)=> (
                                         <div class="col-4 ">
                                             <div class="event-card shadow-lg p-2 mt-3">
-                                                <img class="img-fluid" src="https://storage.googleapis.com/whos_on_bucket/band.jpg" alt="band photo"></img>
+                                                <img class="img-fluid" src={show.img} alt="band photo"></img>
                                                 <h3>{show.band_name}</h3>
                                                 <h5>{show.day} {show.month}</h5>
                                                 <h5>{show.time} at {show.venue_name}</h5>

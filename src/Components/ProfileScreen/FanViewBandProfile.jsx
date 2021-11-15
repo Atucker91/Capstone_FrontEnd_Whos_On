@@ -14,7 +14,7 @@ const FanViewBandProfile = (props) => {
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <img class="img-fluid" src="https://storage.googleapis.com/whos_on_bucket/band.jpg" alt="band photo" ></img>
+                                    <img class="img-fluid" src={props.bandProfile.img} alt="band photo" ></img>
                                 </div>
                                 <div class="col pt-2 pb-2"> 
                                     <div class="row">
@@ -29,7 +29,7 @@ const FanViewBandProfile = (props) => {
                                 </div>
                             </div>
                             <div class="row mt-5 mb-5">
-                                <iframe src={props.loggedInBand.song_to_display} width="500" height="400" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                                <iframe src={props.bandProfile.song_to_display} width="500" height="400" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
                             </div>
 
                             <h2>Schedule</h2>

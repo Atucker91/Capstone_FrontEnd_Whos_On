@@ -17,7 +17,7 @@ const FanViewVenueProfile = (props) => {
                         </div>
                         <div class="row mb-5">
                             <div class="col">
-                                <img class="img-fluid" src="https://storage.googleapis.com/whos_on_bucket/band.jpg" alt="band photo" ></img>
+                                <img class="img-fluid" src={props.venueProfile.img} alt="band photo" ></img>
                             </div>
                             <div class="col pt-2 pb-2"> 
                                 <div class="row">
