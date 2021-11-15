@@ -7,13 +7,13 @@ const LandingScreen = () => {
             <h1>LandingScreen</h1>
             <ul>
                 <li>
-                    <Link to='/register'>Register</Link>
+                    <Link to='/userregister'>Fan Registration</Link>
                 </li>
                 <li>
-                    <Link to='/bandregister'>Band Register</Link>
+                    <Link to='/bandregister'>Band Registration</Link>
                 </li>
                 <li>
-                    <Link to='/venueregister'>Venue Register</Link>
+                    <Link to='/venueregister'>Venue Registration</Link>
                 </li>
             </ul>
         </div>

@@ -16,6 +16,7 @@ import CreateBand from './Components/Creation/CreateBand';
 import CreateVenue from './Components/Creation/CreateVenue';
 import BandProfileScreen from './Components/ProfileScreen/BandProfileScreen';
 import VenueProfileScreen from './Components/ProfileScreen/VenueProfileScreen';
+import UserRegisterScreen from './Components/RegisterScreen/UserRegistration';
 
 
 
@@ -411,6 +412,7 @@ class App extends Component {
               }}
             />
             <Route path='/register'  render={props =>  <RegisterScreen {...props} registerUser={this.registerUser} /> } />
+            <Route path='/userregister'  render={props =>  <UserRegisterScreen {...props} registerUser={this.registerUser} /> } />
             <Route path='/bandregister'  render={props =>  <BandRegisterScreen {...props} registerUser={this.registerBand} /> } />
             <Route path='/venueregister'  render={props =>  <VenueRegisterScreen {...props} registerUser={this.registerVenue} /> } />
             <Route path='/login' render={props =>  <LoginScreen {...props} loginUser={this.loginUser} /> } />
