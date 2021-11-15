@@ -4,6 +4,11 @@ const VenueProfileScreen = (props) => {
 
     const [band_name, setBandName] = useState();
     const [date, setDate] = useState();
+    const [month, setMonth] = useState();
+    const [day, setDay] = useState();
+    const [year, setYear] = useState();
+    const [time, setTime] = useState();
+    
     let bandId = 1;
 
     const handleChangeBand = (event) => {
@@ -11,8 +16,24 @@ const VenueProfileScreen = (props) => {
         setBandName(event.target.value)
     }
 
-    const handleChange = (event) => {
+    const handleChangeDate = (event) => {
         setDate(event.target.value)
+    }
+
+    const handleChangeMonth = (event) => {
+        setMonth(event.target.value)
+    }
+
+    const handleChangeDay = (event) => {
+        setDay(event.target.value)
+    }
+
+    const handleChangeYear = (event) => {
+        setYear(event.target.value)
+    }
+
+    const handleChangeTime = (event) => {
+        setTime(event.target.value)
     }
 
     const handleSubmit = (event) => {
@@ -36,7 +57,11 @@ const VenueProfileScreen = (props) => {
         let show = {
             band_id:bandId,
             venue_id:props.loggedInVenue.id,
-            date:date
+            date:date,
+            month:month,
+            day:day,
+            year:year,
+            time:time
         }
         props.addShow(show)
     }
@@ -53,7 +78,7 @@ const VenueProfileScreen = (props) => {
                 <ul>
                     {props.allSchedule.map((show)=> (
                         <div>
-                            <li>Date:{show.date} Band:{show.band_name} Venue:{show.venue_name}</li>
+                            <li>Date:{show.day} {show.month} {show.time} Band:{show.band_name} Venue:{show.venue_name}</li>
                         </div>
                     ))}
                 </ul>
@@ -63,7 +88,11 @@ const VenueProfileScreen = (props) => {
                 <h2>Add Show</h2>
                 <form onSubmit={handleSubmit}>
                     <input name="band_name" onChange={handleChangeBand} value={band_name} placeholder='Band Name'/>
-                    <input name="date" onChange={handleChange} value={date} placeholder='Date'/>
+                    <input name="date" onChange={handleChangeDate} value={date} placeholder='Date'/>
+                    <input name="month" onChange={handleChangeMonth} value={month} placeholder='Month'/>
+                    <input name="day" onChange={handleChangeDay} value={day} placeholder='Day'/>
+                    <input name="year" onChange={handleChangeYear} value={year} placeholder='Year'/>
+                    <input name="time" onChange={handleChangeTime} value={time} placeholder='Time'/>
                     <button type="submit">Add</button>
                 </form>
             </div> 

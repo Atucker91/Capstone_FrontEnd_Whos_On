@@ -3,7 +3,12 @@ import React, {useState} from 'react';
 const BandProfileScreen = (props) => {
 
     const [venue_name, setVenueName] = useState();
-    const [date, setDate] = useState();
+    // const [date, setDate] = useState();
+    const [month, setMonth] = useState();
+    const [day, setDay] = useState();
+    const [year, setYear] = useState();
+    const [time, setTime] = useState();
+
     let venueId = 1;
 
     const handleChangeVenue = (event) => {
@@ -11,15 +16,31 @@ const BandProfileScreen = (props) => {
         setVenueName(event.target.value)
     }
 
-    const handleChange = (event) => {
-        setDate(event.target.value)
+    // const handleChangeDate = (event) => {
+    //     setDate(event.target.value)
+    // }
+
+    const handleChangeMonth = (event) => {
+        setMonth(event.target.value)
+    }
+
+    const handleChangeDay = (event) => {
+        setDay(event.target.value)
+    }
+
+    const handleChangeYear = (event) => {
+        setYear(event.target.value)
+    }
+
+    const handleChangeTime = (event) => {
+        setTime(event.target.value)
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
         console.log("venue name:", venue_name)
-        console.log("date:", date)
+        // console.log("date:", date)
         console.log("band id:", props.loggedInBand.id)
 
 
@@ -36,7 +57,11 @@ const BandProfileScreen = (props) => {
         let show = {
             band_id:props.loggedInBand.id,
             venue_id:venueId,
-            date:date
+            // date:date,
+            month:month,
+            day:day,
+            year:year,
+            time:time
         }
         props.addShow(show)
     }
@@ -55,7 +80,7 @@ const BandProfileScreen = (props) => {
                 <ul>
                     {props.allSchedule.map((show)=> (
                         <div>
-                            <li>Date:{show.date} Band:{show.band_name} Venue:{show.venue_name}</li>
+                            <li>Date:{show.day} {show.month} {show.time} Band:{show.band_name} Venue:{show.venue_name}</li>
                         </div>
                     ))}
                 </ul>
@@ -65,7 +90,11 @@ const BandProfileScreen = (props) => {
                 <h2>Add Show</h2>
                 <form onSubmit={handleSubmit}>
                     <input name="venue_name" onChange={handleChangeVenue} value={venue_name} placeholder='Venue Name'/>
-                    <input name="date" onChange={handleChange} value={date} placeholder='Date'/>
+                    {/* <input name="date" onChange={handleChangeDate} value={date} placeholder='Date'/> */}
+                    <input name="month" onChange={handleChangeMonth} value={month} placeholder='Month'/>
+                    <input name="day" onChange={handleChangeDay} value={day} placeholder='Day'/>
+                    <input name="year" onChange={handleChangeYear} value={year} placeholder='Year'/>
+                    <input name="time" onChange={handleChangeTime} value={time} placeholder='Time'/>
                     <button type="submit">Add</button>
                 </form>
             </div> 

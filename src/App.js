@@ -296,6 +296,10 @@ class App extends Component {
               {  
                 
                 let show = {
+                  day: response.data[x].day,
+                  month: response.data[x].month,
+                  time: response.data[x].time,
+                  year: response.data[x].year,
                   date: response.data[x].date,
                   venue_name: lVenues[y].venue_name,
                   band_name: fBands[i].band_name
@@ -319,6 +323,10 @@ class App extends Component {
             for(let y = 0; y < venues.length; y++){
               if(venues[y].id == response.data[x].venue_id){
                 let show = {
+                  day: response.data[x].day,
+                  month: response.data[x].month,
+                  time: response.data[x].time,
+                  year: response.data[x].year,
                   date: response.data[x].date,
                   venue_name: venues[y].venue_name,
                   band_name: bands[i].band_name
@@ -343,6 +351,10 @@ class App extends Component {
             for(let y = 0; y < bands.length; y++){
               if(bands[y].id == response.data[x].band_id){
                 let show = {
+                  day: response.data[x].day,
+                  month: response.data[x].month,
+                  time: response.data[x].time,
+                  year: response.data[x].year,
                   date: response.data[x].date,
                   venue_name: venues[i].venue_name,
                   band_name: bands[y].band_name
