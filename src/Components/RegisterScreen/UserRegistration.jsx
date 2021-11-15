@@ -70,7 +70,7 @@ class UserRegisterScreen extends Component {
                             </div>
                             <div class="col"> 
                                 <label for="username">Password</label>
-                                <input class="form-control" name="password" onChange={this.handleChange} value={this.state.password} placeholder='password'/>
+                                <input class="form-control" type="password" name="password" onChange={this.handleChange} value={this.state.password} placeholder='password'/>
                             </div>
                         </div>
                             <button class="btn btn-primary" type="submit">Register</button>

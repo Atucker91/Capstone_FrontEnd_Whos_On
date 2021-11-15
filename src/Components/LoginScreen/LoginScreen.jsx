@@ -42,7 +42,7 @@ class LoginScreen extends Component {
                                 </div>
                                 <div class="mb-3">
                                     <label for="password">Password:</label>
-                                    <input class="form-control" name="password" onChange={this.handleChange} value={this.state.password} placeholder='Enter Password'/>
+                                    <input class="form-control" type="password" name="password" onChange={this.handleChange} value={this.state.password} placeholder='Enter Password'/>
                                 </div>
                                     <button class="btn btn-primary" type="submit">Login</button>
                             </form>

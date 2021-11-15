@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import './NonFanProfileView.css';
 
 const VenueProfileScreen = (props) => {
 
@@ -68,36 +69,75 @@ const VenueProfileScreen = (props) => {
 
     return (
         <div>
-            <div>
-                <h1>Venue ProfileScreen {props.user.username}</h1>
-                <h1>{props.loggedInVenue.venue_name}</h1>
-            </div>
+            <div class="row">
+                <div class="col-1"></div>
+                    <div class="col-10">
+                        <div class="container mt-3 form">
+                        <div class="row">
+                            <h1>{props.loggedInVenue.venue_name}</h1>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col">
+                                <img class="img-fluid" src="https://storage.googleapis.com/whos_on_bucket/band.jpg" alt="band photo" ></img>
+                            </div>
+                            <div class="col pt-2 pb-2"> 
+                                <div class="row">
+                                    <h2>City : {props.loggedInVenue.city}</h2>
+                                    <h2>About</h2>
+                                </div>   
+                                <div class="row">
+                                    <p>{props.loggedInVenue.about}</p>
+                                </div>
+                            </div>
+                        </div>
+                
+                
+            
         
             <h2>Schedule</h2>
-            <div>
-                <ul>
+            <div class="row">
+                
                     {props.allSchedule.map((show)=> (
-                        <div>
-                            <li>Date:{show.day} {show.month} {show.time} Band:{show.band_name} Venue:{show.venue_name}</li>
+                        <div class='col'>
+                            <h6>{show.day} {show.month} {show.time}</h6> Band:{show.band_name} 
                         </div>
                     ))}
-                </ul>
+                
             </div>
 
-            <div>
+            <div class="row mt-3">
                 <h2>Add Show</h2>
                 <form onSubmit={handleSubmit}>
-                    <input name="band_name" onChange={handleChangeBand} value={band_name} placeholder='Band Name'/>
-                    <input name="date" onChange={handleChangeDate} value={date} placeholder='Date'/>
-                    <input name="month" onChange={handleChangeMonth} value={month} placeholder='Month'/>
-                    <input name="day" onChange={handleChangeDay} value={day} placeholder='Day'/>
-                    <input name="year" onChange={handleChangeYear} value={year} placeholder='Year'/>
-                    <input name="time" onChange={handleChangeTime} value={time} placeholder='Time'/>
-                    <button type="submit">Add</button>
+                    <div class="row">
+                        <div class="col">
+                            <label for="venue_name">Band</label>
+                            <input class="form-control" name="band_name" onChange={handleChangeBand} value={band_name} placeholder='Band Name'/>
+                        </div>
+                        <div class="col">
+                            <label for="venue_name">Month</label>
+                            <input class="form-control" name="month" onChange={handleChangeMonth} value={month} placeholder='Month'/>
+                        </div>
+                        <div class="col">
+                            <label for="venue_name">Day</label>
+                            <input class="form-control" name="day" onChange={handleChangeDay} value={day} placeholder='Day'/>
+                        </div>
+                        <div class="col">
+                            <label for="venue_name">Year</label>
+                            <input class="form-control" name="year" onChange={handleChangeYear} value={year} placeholder='Year'/>
+                        </div>
+                        <div class="col">
+                            <label for="venue_name">Time</label>
+                            <input class="form-control" name="time" onChange={handleChangeTime} value={time} placeholder='Time'/>
+                        </div>
+                        <button class="btn btn-primary mt-2" type="submit">Add</button>
+                    </div>
                 </form>
             </div> 
-
         </div>
+    </div>
+    <div class="col-1"></div>
+    </div>
+    </div>
     )
 }
 

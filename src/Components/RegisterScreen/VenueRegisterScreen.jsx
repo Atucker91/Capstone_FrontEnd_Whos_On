@@ -51,7 +51,7 @@ class VenueRegisterScreen extends Component {
                             </div>
                             <div class="row mb-3 mt-3">
                                 <label for="username">Password</label>
-                                <input class="form-control" name="password" onChange={this.handleChange} value={this.state.password} placeholder='Password'/>
+                                <input class="form-control" type="password" name="password" onChange={this.handleChange} value={this.state.password} placeholder='Password'/>
                             </div>
                                 <button class="btn btn-primary" type="submit">Register</button>
                             </form>

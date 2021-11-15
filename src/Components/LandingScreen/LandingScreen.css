@@ -1,0 +1,16 @@
+.top-row {
+  height: 200px;
+}
+
+.bottom-row {
+  height: 100px;
+}
+
+.login-form {
+  border-radius: 5px;
+  background-color: rgb(165, 165, 165);
+  padding-bottom: 10px;
+  padding-top: 10px;
+  text-align: center;
+  font-size: 30px;
+}

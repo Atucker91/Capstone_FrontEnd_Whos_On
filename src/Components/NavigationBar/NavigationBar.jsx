@@ -5,8 +5,11 @@ import { Link } from 'react-router-dom';
 const NavigationBar = (props) => {
     return(
         <div>
-            {props.user && <h4>Welcome {props.user.username}</h4>}
+            {/* {props.user && <h4>Welcome {props.user.username}</h4>} */}
             <ul class="nav-list">
+                <li>
+                <Link to='/'>Welcome To Who's On</Link>
+                </li>
                 <li>
                     <Link to='/'>Home</Link>
                 </li>
@@ -25,7 +28,7 @@ const NavigationBar = (props) => {
                 }
                 {props.user &&
                     <React.Fragment>
-                        <li class="logout">
+                        <li>
                             <Link onClick={props.logoutUser}>Logout</Link>
                         </li>
                     </React.Fragment>

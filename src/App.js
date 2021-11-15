@@ -17,6 +17,8 @@ import CreateVenue from './Components/Creation/CreateVenue';
 import BandProfileScreen from './Components/ProfileScreen/BandProfileScreen';
 import VenueProfileScreen from './Components/ProfileScreen/VenueProfileScreen';
 import UserRegisterScreen from './Components/RegisterScreen/UserRegistration';
+import FanViewBandProfile from './Components/ProfileScreen/FanViewBandProfile';
+import FanViewVenueProfile from './Components/ProfileScreen/FanViewVenueProfile';
 
 
 
@@ -26,7 +28,11 @@ class App extends Component {
     this.state = { 
       userData:null,
       loggedInBand:null,
+      bandProfile: null,
       loggedInVenue:null,
+      venueProfile:null,
+      bandShows: [],
+      venueShows: [],
       bands: [],
       venues: [],
       localBands: [],
@@ -380,6 +386,115 @@ class App extends Component {
     window.location = '/profile';
   }
 
+  getBandProfile = async(band) =>{
+    let bands = this.state.bands
+    let foundBand
+    for(let i = 0; i < bands.length; i++)
+    {
+      if(bands[i].id == band.id)
+      {
+        foundBand = bands[i]
+      }
+    }
+    console.log("getBandShows band: ", foundBand)
+    this.setState({
+      bandProfile: foundBand
+    });
+    console.log("getBandShows band: ", this.state.bandProfile)
+    this.getBandShows(band)
+  }
+
+  getBandShows = async(band) =>{
+    let allShows = this.state.allSchedule
+    let venues = this.state.venues
+    let newArray = []
+
+    for(let x = 0; x < allShows.length; x++)
+      {
+        if(band.band_name == allShows[x].band_name)
+        {
+          for(let y = 0; y < venues.length; y++)
+          {
+            if(venues[y].venue_name == allShows[x].venue_name)
+            {
+              let show = {
+                day: allShows[x].day,
+                month: allShows[x].month,
+                time: allShows[x].time,
+                year: allShows[x].year,
+                date: allShows[x].date,
+                venue_name: venues[y].venue_name,
+                band_name: band.band_name
+              }
+                newArray.push(show)
+            }
+          }
+            
+        }
+      }
+      
+    console.log("Shows: ", newArray)
+    this.setState({
+      bandShows: newArray
+    });
+    console.log("Before window.location band: ", this.state.bandProfile)
+    console.log("Before window.location shows: ", this.state.bandShows)
+    
+  }
+
+  getVenueProfile = async(venue) =>{
+    let venues = this.state.venues
+    let foundVenue
+    
+    for(let i = 0; i < venues.length; i++)
+    {
+      if(venues[i].id == venue.id)
+      {
+        foundVenue = venues[i]
+      }
+    }
+    
+    this.setState({
+      venueProfile: foundVenue
+    });
+    
+    this.getVenueShows(venue)
+  }
+
+  getVenueShows = async(venue) =>{
+    let allShows = this.state.allSchedule
+    let bands = this.state.bands
+    let newArray = []
+
+    for(let x = 0; x < allShows.length; x++)
+      {
+        if(venue.venue_name == allShows[x].venue_name)
+        {
+          for(let y = 0; y < bands.length; y++)
+          {
+            if(bands[y].band_name == allShows[x].band_name)
+            {
+              let show = {
+                day: allShows[x].day,
+                month: allShows[x].month,
+                time: allShows[x].time,
+                year: allShows[x].year,
+                date: allShows[x].date,
+                band_name: bands[y].band_name,
+                venue_name: venue.venue_name
+              }
+                newArray.push(show)
+            }
+          }
+            
+        }
+      }
+    this.setState({
+      venueShows: newArray
+    });
+    
+  }
+
   logoutUser = async() =>{
     localStorage.removeItem('token');
     window.location = '/login'
@@ -410,7 +525,8 @@ class App extends Component {
                     // console.log("Redirecting to Profile")
                     return <ProfileScreen {...props} user={this.state.userData} bands={this.state.localBands} venues={this.state.localVenuesNotFollowed} 
                     followedBands={this.state.followedBands} followedVenues={this.state.followedVenues} addBandToFollow={this.addBandToFollow} 
-                    addVenueToFollow={this.addVenueToFollow} allSchedule={this.state.allSchedule}/>
+                    addVenueToFollow={this.addVenueToFollow} allSchedule={this.state.allSchedule} getBandProfile={this.getBandProfile}
+                    getVenueProfile={this.getVenueProfile}/>
                   }
                   else if(this.state.userData != null && this.state.userData.is_band)   {
                     return <BandProfileScreen {...props} user={this.state.userData} bands={this.state.bands} venues={this.state.venues}
@@ -432,6 +548,8 @@ class App extends Component {
             <Route path='/venuelogin' render={props =>  <VenueLoginScreen {...props} loginUser={this.loginVenue} /> } />
             <Route path='/createBand' render={props =>  <CreateBand {...props} createBand={this.createBand} /> } />
             <Route path='/createVenue' render={props =>  <CreateVenue {...props} createVenue={this.createVenue} /> } />
+            <Route path='/viewBand' render={props =>  <FanViewBandProfile {...props} addBandToFollow={this.addBandToFollow} bandProfile={this.state.bandProfile} bandShows={this.state.bandShows}/> } />
+            <Route path='/viewVenue' render={props =>  <FanViewVenueProfile {...props} addVenueToFollow={this.addVenueToFollow} venueProfile={this.state.venueProfile} venueShows={this.state.venueShows}/> } />
             <Route path='/' component={LandingScreen} />
           </Switch>
         </div>

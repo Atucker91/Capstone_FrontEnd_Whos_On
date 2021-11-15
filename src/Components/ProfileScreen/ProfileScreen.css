@@ -8,7 +8,12 @@
 
 .content {
   border-radius: 5px;
-  background-color: whitesmoke;
+  background-color: rgb(223, 221, 221);
   padding-bottom: 10px;
   padding-top: 5px;
+}
+
+.event-card {
+  background-color: rgb(215, 211, 211);
+  border-radius: 5px;
 }
