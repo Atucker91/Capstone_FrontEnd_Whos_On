@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import  './RegisterScreen.css';
 
 class BandRegisterScreen extends Component {
     constructor(props) {
@@ -29,13 +30,40 @@ class BandRegisterScreen extends Component {
     render() { 
         return ( 
             <div>
-                <h1>Band Registration</h1>
-                <form onSubmit={this.handleSubmit}>
-                    <input name="username" onChange={this.handleChange} value={this.state.username} placeholder='Username'/>
-                    <input name="email" onChange={this.handleChange} value={this.state.email} placeholder='Email'/>
-                    <input name="password" onChange={this.handleChange} value={this.state.password} placeholder='Password'/>
-                    <button type="submit">Register</button>
-                </form>
+                <div class="row">
+                    <div class="top-row"></div>
+                </div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col">
+                        <div class="container mt-3 form">
+
+                            <h1>Band Registration</h1>
+                            <form onSubmit={this.handleSubmit}>
+                            
+                            <div class="row mb-3 mt-3">
+                                <label for="username">Username</label>
+                                <input class="form-control" name="username" onChange={this.handleChange} value={this.state.username} placeholder='Username'/>
+                            </div>
+                            <div class="row mb-3 mt-3">
+                            <label for="username">Email</label>
+                                <input class="form-control" name="email" onChange={this.handleChange} value={this.state.email} placeholder='Email'/>
+                            </div>
+                            <div class="row mb-3 mt-3">
+                                <label for="username">Password</label>
+                                <input class="form-control" name="password" onChange={this.handleChange} value={this.state.password} placeholder='Password'/>
+                            </div>
+                                <button class="btn btn-primary" type="submit">Register</button>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="col"></div>
+                </div>
+
+                <div class="row">
+                    <div class="bottom-row"></div>
+                </div>
             </div> 
         );
     }
